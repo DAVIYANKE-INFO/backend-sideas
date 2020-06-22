@@ -60,7 +60,6 @@ class AsisController extends Controller
 
         }
       }
-      //echo "ss" . ($completo[0]{"id"});
       return response()->json(array('CARNET'=>$completo[0]{"id"},'cliente'=>$completo));
     }
 
@@ -85,10 +84,6 @@ class AsisController extends Controller
         {
             echo (" ".$this->feriado[$i]);
         }
-       //echo ("feriado final " . $this->feriado[28]);
-       // return response()->json($asistencia); 
-      //$this->feriado = array(); 
-     // return response()->json($filterse);
   }
 
     public function obtienepasantes(Request $request)
@@ -100,90 +95,6 @@ class AsisController extends Controller
  public function retpapeletas(Request $request)
   {
 
-
-/*
-
-
-
-      $mes=$request->mes;
-      $semestr=$request->semestre;
-      $year=$request->año;
-      //echo ("string" . $meso);
-      //echo ("string" . $semestr);
-      //echo ("string" . $year);
-      if($mes=="")
-      {
-        if($semestr=="")
-        {
-            $papeletas=Salida::select('*')->whereYear('fecha','=',$year)->get();
-            $nro_usuarios=Salida::select('cod_nombre')->whereYear('fecha','=',$year)->groupBy('cod_nombre')->get();
-        }
-        else
-        {
-            $date = Carbon::now();
-            $date = $date->format('Y-m-d');
-            //echo "aqui llega--> " . $date;
-            $hoy_año=substr($date, 0, 4);;
-          if($semestr==('I / '. $hoy_año))
-          {
-            $papeletas=Salida::select('*')->whereMonth('fecha','<=','6')->get();
-            $nro_usuarios=Salida::select('cod_nombre')->whereMonth('fecha','<=','6')->groupBy('cod_nombre')->get();
-          }
-          if($semestr==('II / '. $hoy_año))
-          {
-            $papeletas=Salida::select('*')->whereMonth('fecha','>=','7')->get();
-            $nro_usuarios=Salida::select('cod_nombre')->whereMonth('fecha','>=','7')->groupBy('cod_nombre')->get();
-          }
-        }
-      }
-      else
-      {
-        switch ($mes) 
-              {
-                  case 'ENERO':
-                      $mes=1;
-                      break;
-                  case 'FEBRERO':
-                      $mes=2;
-                      break;
-                  case 'MARZO':
-                      $mes=3;
-                      break;
-                  case 'ABRIL':
-                      $mes=4;
-                      break;
-                  case 'MAYO':
-                      $mes=5;
-                      break;
-                  case 'JUNIO':
-                      $mes=6;
-                      break;
-                  case 'JULIO':
-                      $mes=7;
-                      break;
-                  case 'AGOSTO':
-                      $mes=8;
-                      break;
-                  case 'SEPTIEMBRE':
-                      $mes=9;
-                      break;
-                  case 'OCTUBRE':
-                      $mes=10;
-                      break;
-                  case 'NOVIEMBRE':
-                      $mes=11;
-                      break;
-                  case 'DICIEMBRE':
-                      $mes=12;
-                      break;
-              }
-
-      $papeletas=Salida::select('*')->whereMonth('fecha','=',$mes)->get();
-      $nro_usuarios=Salida::select('cod_nombre')->whereMonth('fecha','=',$mes)->groupBy('cod_nombre')->get();
-
-      }
-return response()->json(array('salidas'=> $papeletas,'nro_usuarios'=>count($nro_usuarios)));
-*/
     $pasantes=Salida::all();
       $pdf = \PDF::loadView('vista-pdf-prueba', compact('pasantes'))
     ->save(storage_path('app/public/') . 'informe.pdf');
@@ -253,7 +164,6 @@ return response()->json(array('salidas'=> $papeletas,'nro_usuarios'=>count($nro_
         $usuario->nombre=$request->nombre;
         $usuario->usuario=$request->usuario;
         $usuario->contraseña=$request->contraseña;
-        //$usuario->contraseña=encrypt($request->contraseña);
         $usuario->cargo=$request->cargo;
         $usuario->departamento=$request->departamento;
         $usuario->estado="activo";
@@ -312,31 +222,21 @@ return response()->json(array('salidas'=> $papeletas,'nro_usuarios'=>count($nro_
     {
         $cis=$request->codigousu;
         $fechas=$request->fecha;
-        //echo("CI ".$cis);
-        //echo("FECHA ".$fechas);
-        
-      // echo "C.I.: " . $cis . '<br>';
-      // echo "FECHA SALIDA: " . $fechas;
+
         $año=substr($fechas, 0, 4);
         $mes=substr($fechas, 5, 2);
         $dia=substr($fechas, 8);
 
-        /*echo "DIA: " . $dia;
-        echo "MES: " . $mes;
-        echo "AÑO: " . $año;*/
+
 
         $d=(int)$dia;
         //$d=$d-1;
         $m=(int)$mes;
         $a=(int)$año;
 
-        /*echo "DIA+1: " . ($d+1);
-        echo "MES+1: " . ($m+1);
-        echo "AÑO+1: " . ($a+1);*/
-        //$carbon = new \Carbon\Carbon();
+
         $date = Carbon::now();
         $date = $date->format('Y-m-d');
-        //echo "aqui llega--> " . $date;
         $hoy_año=substr($date, 0, 4);
         $hoy_mes=substr($date, 5, 2);
         $hoy_dia=substr($date, 8);
@@ -344,11 +244,6 @@ return response()->json(array('salidas'=> $papeletas,'nro_usuarios'=>count($nro_
         $mes_hoy=(int)$hoy_mes;
         $año_hoy=(int)$hoy_año;
 
-        /*echo " DIA HOY: " . ($dia_hoy);
-        echo " HOY: " . ($d);
-        echo " MESSS: " . ($mes_hoy);
-        echo "MES HOY: " . ($mes_hoy+1);
-        echo "AÑO HOY: " . ($año_hoy+1);*/
 
         $sw=0;
         if($d>$dia_hoy)
@@ -382,7 +277,6 @@ return response()->json(array('salidas'=> $papeletas,'nro_usuarios'=>count($nro_
           }
               $fech=$a . "-" . $cad_mes . "-" . $cad_dia;
 
-          //echo "  X--->  ". $fech;
 
           $asiste=Asistencia::select('*')->where('ci','like',$cis)->where('fecha','like',$fech)->get();
           if($asiste=="[]")
@@ -475,8 +369,6 @@ return response()->json(array('salidas'=> $papeletas,'nro_usuarios'=>count($nro_
            $salida->firmarrhh = $request->firmarrhh;
            $salida->observacion = $request->observacion;
            $salida->entregado = "NO";
-           //$salida->save();
-           //$cont=Salida::all()->count();
 
            $mio=Salida::all();
 
@@ -533,7 +425,6 @@ return response()->json(array('salidas'=> $papeletas,'nro_usuarios'=>count($nro_
            $salida->observacion = $request->observacion;
            $salida->entregado = "NO";
            $salida->save();
-           //$cont=Salida::all()->count();
 
            $elige=Salida::select('*')->orderBy('id', 'desc')->take(1)->get();
            $cont=$elige[0]["id"];
@@ -565,9 +456,7 @@ public function consultasalid2(Request $request)
            $notificacion->firmasolicitanten = $request->firmasol;
            $notificacion->firmajefen = $request->firmajefe;
            $notificacion->firmarrhhn = $request->firmarrhh;
-           $notificacion->save();
-           //$cont=Salida::all()->count();
-        // return response()->json($notificacion);    
+           $notificacion->save();   
     }
 
     public function consultacons1(Request $request)
@@ -602,16 +491,12 @@ public function consultasalid2(Request $request)
      $name = explode(':',$ccc);
        $cc = explode('}',$name[1]);
        $ccc = explode('"',$cc[0]);
-       //echo "------  " . $ccc[1];
-       //$url = "https://i.ibb.co/QMmwj3J/david.jpg";
+
        $url = "E:/defaults/".$ccc[1];
 
-     //echo "" . $url;
    $contents = file_get_contents($url); 
-    //  echo "+++++++  " . $url;
-        //$imagedata = file_get_contents('/public/defaults/wini.jpg');
+
      $string = base64_encode($contents);
-       //echo $string;
 
        return response()->json($string);
     } 
@@ -668,15 +553,10 @@ public function consultasalid2(Request $request)
     public function consultactualiza(Request $request)
     {
         $id=$request->carnetactual;
-        //$cid=$request->nuevo_login;
-       // $usu=$request->nuevo_password;
         $usuar=Usuario::where('id','=',$id)->first();
-        //$usuar->id=$request->nuevo_password;
         $usuar->usuario=$request->nuevo_login;
         $usuar->contraseña=$request->nuevo_password;
         $usuar->save();
-      //return response()->json($name[1]);
-      //$usuar->save(); 
         return response()->json($usuar);
     }
 
@@ -724,8 +604,6 @@ public function consultasalid2(Request $request)
     }
     public function actualizausuestado(Request $request)
     {
-      //echo "string" . $request->id;
-      //echo "string x" . $request->estado;
       $id=$request->id;
         $usuario=Usuario::where('id','=',$id)->first();
         $usuario->estado=$request->estado;
